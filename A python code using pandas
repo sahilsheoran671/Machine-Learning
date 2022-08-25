@@ -1,0 +1,136 @@
+# We have given a file consisting of data: pima-indians-diabetes.csv
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+pid= pd.read_csv(r'C:\Users\ASUS\Downloads\pima-indians-diabetes.csv')
+pregs = pid["pregs"].tolist()
+age = pid["Age"].tolist()
+plas = pid["plas"].tolist()
+pres = pid["pres"].tolist()
+skin = pid["skin"].tolist()
+test = pid["test"].tolist()
+pedi = pid["pedi"].tolist()
+BMI = pid["BMI"].tolist()
+
+
+#Scatter plot Age vs all other attributes
+plt.scatter(age,pregs,4,color='b')
+plt.xlabel("age")
+plt.ylabel("pregs")
+plt.show()
+plt.savefig("fig_1")
+plt.scatter(age,plas,4,color="r")
+plt.xlabel("age")
+plt.ylabel("plas")
+plt.show()
+#plt.savefig("fig_2")
+plt.scatter(age,pres,4,color="purple")
+plt.xlabel("age")
+plt.ylabel("pres")
+plt.show()
+plt.scatter(age,skin,4,color="r")
+plt.ylabel("pregs")
+plt.xlabel("skin")
+plt.show()
+plt.scatter(age,test,4)
+plt.xlabel("age")
+plt.ylabel("test")
+plt.show()
+plt.scatter(age,pedi,4,color="yellow")
+plt.xlabel("age")
+plt.ylabel("pedi")
+plt.show()
+plt.scatter(age,BMI,4)
+plt.xlabel("age")
+plt.ylabel("BMI")
+plt.show()
+
+
+# In[7]:
+
+
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+pid= pd.read_csv(r'C:\Users\ASUS\Downloads\pima-indians-diabetes.csv')
+pregs = pid["pregs"].tolist()
+age = pid["Age"].tolist()
+plas = pid["plas"].tolist()
+pres = pid["pres"].tolist()
+skin = pid["skin"].tolist()
+test = pid["test"].tolist()
+pedi = pid["pedi"].tolist()
+BMI = pid["BMI"].tolist()
+
+#finding correlation coefficent of Age and all other attributes
+print(np.corrcoef(age,pregs)[0,1])
+print(np.corrcoef(age,plas)[0,1])
+print(np.corrcoef(age,pres)[0,1])
+print(np.corrcoef(age,skin)[0,1])
+print(np.corrcoef(age,test)[0,1])
+print(np.corrcoef(age,pedi)[0,1])
+print(np.corrcoef(age,BMI)[0,1])
+
+
+#finding correlation coefficent of BMI and all other attributes
+print(np.corrcoef(BMI,pregs)[0,1])
+print(np.corrcoef(BMI,plas)[0,1])
+print(np.corrcoef(BMI,pres)[0,1])
+print(np.corrcoef(BMI,skin)[0,1])
+print(np.corrcoef(BMI,test)[0,1])
+print(np.corrcoef(BMI,pedi)[0,1])
+print(np.corrcoef(BMI,age)[0,1])
+
+
+# In[13]:
+
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+pid= pd.read_csv(r'C:\Users\ASUS\Downloads\pima-indians-diabetes.csv')
+pregs = pid["pregs"].tolist()
+skin = pid["skin"].tolist()
+
+plt.hist(x=pregs, bins=17 , rwidth=0.95 ,color='orange')
+plt.title(' pregs')
+plt.xlabel('pregs')
+plt.ylabel('count')
+plt.show()
+
+plt.hist(x=skin , rwidth=0.95 ,color='yellow')
+plt.title(' skin')
+plt.xlabel('skin(mm)')
+plt.ylabel('count')
+plt.show()
+
+
+# In[18]:
+
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+pid= pd.read_csv(r'C:\Users\ASUS\Downloads\pima-indians-diabetes.csv')
+c1 = pid.groupby("class")
+c0 = c1.get_group(0)
+c1 = c1.get_group(1)
+
+pregs0 = c0["pregs"].tolist()
+pregs1 = c1["pregs"].tolist()
+
+plt.hist(x=pregs0, bins=17, rwidth=0.95, color='brown')
+plt.title('histogram for pregs class=0')
+plt.xlabel('preg')
+plt.ylabel('count')
+plt.show()
+plt.hist(x=pregs1 , bins=17 ,rwidth=0.95 , color='blue')
+plt.title('Histogram for pregs class=1')
+plt.xlabel('pregs')
+plt.ylabel('count')
+plt.show()
