@@ -1,0 +1,211 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df_missed = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv')
+
+plt.bar(df_missed.columns, df_missed.isna().sum())       # .isna() shows us all the missing values while sum gives us the count of missing values of the attribute(s)
+plt.title("Number of missing values")                    # Title of the plot 
+plt.xlabel("Missing values")                             # Label of the x-axis
+plt.ylabel("Attributes")                                 # Label of the y-axis
+plt.xticks(rotation='vertical')
+plt.show()
+
+
+# In[3]:
+
+
+ 
+import pandas as pd
+df_missed = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv')
+del_tuple = []
+
+del_tuple = df_missed[df_missed['stationid'].isna()]                                  #  Dataframe containting bool values for isna()
+df_missed.drop(del_tuple.index, inplace = True)                                       # droping tuples from index where df.isna() have true valus
+print('\nTotal no. of tuples deleted:', len(del_tuple.index))
+print('\nRow no. of deleted tuples:\n', *del_tuple.index)
+
+
+# In[4]:
+
+
+import pandas as pd
+
+df_missed = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv')
+
+del_tuple = []                                                        # list to store index of rows which we have to delete
+null_val = df_missed.isna()                                           # Creating Dataframe containting bool values for .isna()
+for i in range(len(df_missed)):                                       # Loop to find rows which we have to delete
+    if sum(null_val.iloc[i]) >= (1/3*len(df_missed.columns)):         # checking the condition for row deletion
+        del_tuple.append(i)                                           # appending row index of row whih have to be deleted in list
+df_missed.drop(del_tuple, inplace = True)                             # droping the rows with index position stored in del_tuple
+
+print('Total no. of tuples deleted:', len(del_tuple))
+print('\nRow no. of deleted tuples:\n', *del_tuple)
+
+
+# In[5]:
+
+
+import pandas as pd
+df = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv')
+
+print(df.isna().sum())                                               # calculating Na values in each column
+print('\nTotal no. of missing values:',int(sum(df.isna().sum())))
+
+
+# In[8]:
+
+
+import pandas as pd 
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+pd.set_option('display.max_rows', 100)
+pd.set_option('display.max_columns', 100)
+pd.set_option('display.width', 1000)
+pd.set_option('display.max_colwidth', None)
+
+a = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv')
+b = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_original.csv')
+A1 = a.fillna(a.mean())
+
+Table1 = A1.agg(['mean','median','std'])
+A2 = A1.mode(axis ='rows')
+A2 = A2.drop([A2.index[1]])
+
+#Adding the mode result to the above dataframe.
+Table1 = Table1.append(A2)
+
+#Changing index from 0 to mode.
+as_list = Table1.index.tolist()
+idx = as_list.index(0)
+as_list[idx] = 'mode'
+Table1.index = as_list
+
+#Rounding off the value upto 3 decimal places
+Table1 = Table1.round(decimals=3)
+print(Table1)
+
+Table2 = b.agg(['mean','median','std'])
+
+B1 = b.mode(axis='rows')
+B1 = B1.drop([B1.index[1]])
+
+Table2  = Table2.append(B1)
+
+list2 = Table2.index.tolist()
+x1 = list2.index(0)
+list2[x1] = 'mode'
+Table2.index = list2
+Table2 = Table2.round(decimals=3)
+print(Table2)
+
+B3 = b.drop(['dates','stationid'], axis = 1)
+A3 = A1.drop(['dates', 'stationid'], axis = 1)
+
+def rmse(a1):
+ realVals = B3[a1]
+ predictedVals = A3[a1]
+ rmse1 = mean_squared_error(realVals, predictedVals, squared = False)
+ return rmse1.round(3)
+
+p1 = ['temperature','humidity','pressure','rain','lightavgw/o0','lightmax','moisture']
+p2 =[]
+for i in p1:
+    x = rmse(i)
+    p2.append(x)
+  
+bars = plt.bar(p1,p2)
+
+for bar in bars:
+    yval = bar.get_height()
+    plt.text(bar.get_x(), yval + .005, yval)
+    
+plt.xticks(rotation='vertical')
+plt.ylabel("RMSE values")
+plt.show()    
+print(p2)
+
+
+
+
+C1 = a.interpolate()
+
+Table3 = C1.agg(['mean','median','std'])
+
+C2 = C1.mode(axis='rows')
+C2 = C2.drop([C2.index[1]])
+
+Table3  = Table3.append(C2)
+
+list3 = Table3.index.tolist()
+x2 = list3.index(0)
+list3[x2] = 'mode'
+Table3.index = list3
+print(round(Table3,3))
+
+C3 = C1.drop(['dates','stationid'], axis = 1)
+def rmse2(a3):
+ realVals = B3[a3]
+ predictedVals = C3[a3]
+ rmse3 = mean_squared_error(realVals, predictedVals, squared = False)
+ return rmse3.round(3)
+
+
+p3 =[]
+for i in p1:
+    x = rmse2(i)
+    p3.append(x)
+  
+bars2 = plt.bar(p1,p3)
+
+for bar in bars2:
+    yval = bar.get_height()
+    plt.text(bar.get_x(), yval + .005, yval)
+    
+plt.xticks(rotation='vertical')
+plt.ylabel("RMSE values")
+plt.show()
+
+
+# In[9]:
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+a = pd.read_csv(r'C:\Users\ASUS\Downloads\landslide_data3_miss.csv') 
+
+A1 = a.interpolate()
+plt.figure()
+A1.boxplot(['temperature'])
+
+Q1 = A1['temperature'].quantile(0.25)
+Q3 = A1['temperature'].quantile(0.75)
+IQR = Q3 - Q1
+
+plt.figure()
+A1.boxplot(['rain'])
+
+B1 = A1.loc[(A1['temperature'] > (Q3 + (1.5 * IQR))) | (A1['temperature'] < (Q1 - (1.5 * IQR)))]
+print(B1['temperature'])
+
+Q1b = A1['rain'].quantile(0.25)
+Q3b = A1['rain'].quantile(0.75)
+IQR2 = Q3b - Q1b
+
+print(Q1b)
+B2 = A1.loc[(A1['rain'] > (Q3b + (1.5 * IQR2))) | (A1['rain'] < (Q1b - (1.5 * IQR2)))]
+print(B2['rain'])
+
+#b
+Median1 = A1['temperature'].median()
+A2 = A1.replace({'temperature' : {7.6729 : Median1}})
+plt.figure()
+A2.boxplot(['temperature'])
+
+Median2 = A1['rain'].median()
+A1['rain'].values[A1['rain'] > (Q3b + (1.5 * IQR2))] = Median2
+A1['rain'].values[A1['rain'] < (Q1b - (1.5 * IQR2))] = Median2
+plt.figure()
+A1.boxplot(['rain'])
